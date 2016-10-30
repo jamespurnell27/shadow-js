@@ -19,14 +19,15 @@ window.onload = function() {
 
   var Px = boxInfo.width / 200;
 
-  document.addEventListener('click', position);
+  document.addEventListener("click", position);
 
   function position(e){
 
     //USING THE MOUSE POSITION TO DETERMINE THE SHADOW HORIZONTAL AND VERTICAL POSITION
-
+    console.log('yep');
   	shadowVert = (boxMidY - e.clientY) * Px;
   	shadowHorz = (boxMidX - e.clientX) * Px;
+    console.log(shadowVert + ' : ' + shadowHorz);
     if(shadowVert < -200){
       shadowVert = -200;
     };
