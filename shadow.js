@@ -1,5 +1,46 @@
 window.onload = function() {
 
+  //function factory
+  let shadow = function( element, info ) {
+
+      let state = {
+        middleY: info.top + ( info.height/2 ),
+        middleX: info.left + ( info.width/2 ),
+      }
+
+      return {
+        consoley: function() {
+          console.log(state);
+        }
+      }
+
+  }//END function factory
+
+  let shadowElements = []
+  // Get all nodes by Class name 'shadow'
+  let elements = document.getElementsByClassName( 'shadow' );
+  //Loop through node array
+  Array.prototype.forEach.call(elements, function( element, index ) {
+    // Get getBoundingClientRect INFO
+
+    let info = element.getBoundingClientRect()
+    // Create new object
+    let newShadow = shadow( element,info )
+    //Push into array
+    shadowElements.push(newShadow) 
+
+  })
+
+  console.log(shadowElements)
+  console.log(shadowElements[0].consoley())
+
+
+
+};
+
+  ////////////OLD///////////////
+
+/*
   //DECLARE VARIABLES
   var shadowVert, shadowHorz;
 
@@ -45,3 +86,4 @@ window.onload = function() {
   };
 
 };
+*/
