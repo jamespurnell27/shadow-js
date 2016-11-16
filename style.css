@@ -3,7 +3,7 @@
 }
 
 body {
-  background-color: green;
+  background-color: white;
 }
 
 #box1 {
@@ -11,7 +11,7 @@ body {
 	height:100px;
 	font-size:20px;
   box-shadow: 0 0 0 #888888;
-  background-color: red;
+  background-color: white;
   position:absolute;
   margin:200 auto;
   left:0;
@@ -25,7 +25,7 @@ body {
   box-shadow: 0 0 0 #888888;
   background-color: white;
   position:absolute;
-  margin:300 auto;
-  left:0;
+  margin:0;
+  left:200;
   right:0;
 }
