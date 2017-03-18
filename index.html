@@ -5,12 +5,30 @@
 <title>New Page 1</title>
 <link rel="stylesheet" href="style.css" media="screen" title="Main stylesheet">
 <script type="text/javascript" src="shadow.js"></script>
+<script src="ext/jscolor.min.js"></script>
+
 </head>
 
 <body>
 
+	<div id="controls">
+		<form id="controlForm">
+		Color: <input id="controlColor" class="jscolor" value="ab2567" />
+		<br /><br />
+		Blur: <input id="controlBlur" value="10" />
+		</form>
+	</div>
+
 	<div id="box1" class="shadow"></div>
 	<div id="box2" class="shadow"></div>
+
+	<script>
+
+	 let x = document.getElementById("controlForm")
+
+	 console.log(x);
+
+	</script>
 
 </body>
 

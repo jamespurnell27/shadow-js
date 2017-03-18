@@ -4,6 +4,20 @@
 
 body {
   background-color: white;
+	font-size: 10px
+}
+
+#controls {
+	z-index:10;
+	position:absolute;
+	top:0;
+	right:0;
+	width:200px;
+	height:100%;
+	background-color:green;
+
+	padding:10px;
+	color: white;
 }
 
 #box1 {

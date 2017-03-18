@@ -1,6 +1,7 @@
 window.onload = function() {
 
-  //Pub and Sub object///////////////////////////////////////////
+  //PUB AND SUB OBJECT/////////////////////////////////////////////////////////////////////////////////////////////
+
   let pubSub = {
     events: {},
 
@@ -27,16 +28,26 @@ window.onload = function() {
       }
     }
 
-  }; //End of Pub and Sub Object////////////////////////////////////
+  };
 
-  //function factory
-  let shadow = function( element, info ) {
+  //End of Pub and Sub Object/////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+  //SHADOW FUNCTION FACTORY//////////////////////////////////////////////////////////////////////////////////////////////
+
+  let Shadow = function( element, EInfo ) {
 
     let state = {
-      middleY: info.top + ( info.height/2 ),
-      middleX: info.left + ( info.width/2 ),
-      elemHeight: info.height,
-      elemWidth: info.width
+      middleY: EInfo.top + ( EInfo.height/2 ),
+      middleX: EInfo.left + ( EInfo.width/2 ),
+      elemHeight: EInfo.height,
+      elemWidth: EInfo.width,
+      color: '666',
+      blur: '10'
     }
 
     let newX, newY, blur
@@ -44,9 +55,7 @@ window.onload = function() {
     function get_XY( m, b, b_WH ) {
 
       let xy
-      console.log('m: ' + m);
-      console.log('b: ' + b);
-
+      /*
       if( ( m - b ) >= 200 ) {
         xy = 1 * ( b_WH * -0.75 )
       }else if ( ( m - b ) <= -200 ) {
@@ -54,26 +63,59 @@ window.onload = function() {
       }else {
         xy = m < b ? ( ( b - m ) / 200 ) * ( b_WH * 0.55 ) : ( ( m - b ) / 200 ) * ( b_WH * -0.55 )
       }
+      */
+
+      if( ( m - b ) >= 200 ) {
+        xy = -b_WH
+      }else if ( ( m - b ) <= -200 ) {
+        xy = b_WH
+      }else {
+        xy = m < b ? ( ( b - m ) / 200 ) * b_WH : ( ( m - b ) / 200 )
+      }
+
 
       return xy
 
     }
 
-    return {
-      action: function(mouse) {
-        newX = get_XY( mouse.x, state.middleX, state.elemWidth )
-        newY = get_XY( mouse.y, state.middleY, state.elemHeight )
-
-        console.log('y: ' + newY)
-
-        element.style.boxShadow = newX + 'px ' + newY + 'px 50px 20px #666';
-        //element.style.boxShadow = newX + 'px ' + newY + 'px BLUR px SPREAD #666';
-
-      }
+    function render() {
+      element.style.boxShadow = newX + 'px ' + newY + 'px ' + state.blur + 'px 20px #' + state.color;
+      console.log('BS: ' + newX + 'px ' + newY + 'px ' + state.blur + 'px 0px #' + state.color);
+      //element.style.boxShadow = newX + 'px ' + newY + 'px BLUR px SPREAD #666';
     }
 
-  }//END function factory
+    return {
 
+      mousePos: function(mouse) {
+        console.log('eee');
+        newX = get_XY( mouse.x, state.middleX, state.elemWidth )
+        newY = get_XY( mouse.y, state.middleY, state.elemHeight )
+        render()
+      },
+
+      colorChange: function(color) {
+      	state.color = color;
+        render()
+      },
+
+      blurChange: function(blur) {
+        state.blur = blur;
+        render();
+      }
+
+
+    }
+
+  }
+
+  //END function factory/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+  //GET ALL ELEMENTS WITH CLASS OF SHADOW/////////////////////////////////////////////////////////////////////////////////////////
+
+  // Create empty array to hold all 'shadow' nodes
   let shadowElements = []
   // Get all nodes by Class name 'shadow'
   let elements = document.getElementsByClassName( 'shadow' );
@@ -81,19 +123,34 @@ window.onload = function() {
   Array.prototype.forEach.call(elements, function( element, index ) {
     // Get getBoundingClientRect INFO
 
-    let info = element.getBoundingClientRect()
+    let elementInfo = element.getBoundingClientRect()
     // Create new object
-    let newShadow = shadow( element,info )
+    let newShadow = Shadow( element,elementInfo )
     //Push into array
     shadowElements.push( newShadow )
     console.log(index)
-    pubSub.on( "mousePos", shadowElements[index].action );
+    pubSub.on( "mousePos", shadowElements[index].mousePos )
+	  pubSub.on( "colorChange", shadowElements[index].colorChange)
+    pubSub.on( "blurChange", shadowElements[index].blurChange)
 
   })
 
 
-  //Track mouse movement and emit
+
+  //ADD EVENT LISTENERS/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  //track mouse movement
   document.addEventListener("mousemove", mousePos)
+
+  //Control settings changes
+  document.getElementById("controlColor").onchange = colorCh
+
+  //Control settings changes
+  document.getElementById("controlBlur").oninput = blurCh
+
+
+
+  //EVENT LISTENER FUNCTIONS//////////////////////////////////////////////////////////////////////////////////////////////////////
 
   function mousePos(e) {
     let mouse = {
@@ -103,54 +160,16 @@ window.onload = function() {
     pubSub.emit( "mousePos", mouse )
   }
 
-};
+  function colorCh() {
+  	let color = document.getElementById("controlColor").value
+  	console.log('color: ' + color)
+  	pubSub.emit( "colorChange", color )
+  }
 
-  ////////////OLD///////////////
+  function blurCh() {
+    let blur = document.getElementById("controlBlur").value
+    console.log(typeof blur);
+    pubSub.emit( "blurChange", blur )
+  }
 
-/*
-  //DECLARE VARIABLES
-  var shadowVert, shadowHorz;
-
-  //GET NODE PLUS INFO
-  var box = document.getElementById("box");
-  var boxInfo = box.getBoundingClientRect();
-
-  // FIND CENTER OF OBJECT
-  var boxMidY = boxInfo.top + (boxInfo.height/2);
-  var boxMidX = boxInfo.left + (boxInfo.width/2);
-
-  //GET WINDOW INFO
-  var WindowW = window.innerWidth;
-  var WindowH = window.innerHeight;
-
-
-
-  var Px = boxInfo.width / 200;
-
-  document.addEventListener("click", position);
-
-  function position(e){
-
-    //USING THE MOUSE POSITION TO DETERMINE THE SHADOW HORIZONTAL AND VERTICAL POSITION
-    console.log('yep');
-  	shadowVert = (boxMidY - e.clientY) * Px;
-  	shadowHorz = (boxMidX - e.clientX) * Px;
-    console.log(shadowVert + ' : ' + shadowHorz);
-    if(shadowVert < -200){
-      shadowVert = -200;
-    };
-    if(shadowVert > 200){
-      shadowVert = 200;
-    };
-    if(shadowHorz < -200){
-      shadowHorz = -200;
-    };
-    if(shadowHorz > 200){
-      shadowHorz = 200;
-    };
-
-  	box.style.boxShadow =  shadowHorz + 'px ' +  shadowVert + 'px 25px #888888';
-  };
-
-};
-*/
+}//End of window.onload function
