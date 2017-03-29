@@ -55,7 +55,7 @@ window.onload = function() {
     function get_XY( m, b, b_WH ) {
 
       let xy
-      /*
+      
       if( ( m - b ) >= 200 ) {
         xy = 1 * ( b_WH * -0.75 )
       }else if ( ( m - b ) <= -200 ) {
@@ -63,8 +63,8 @@ window.onload = function() {
       }else {
         xy = m < b ? ( ( b - m ) / 200 ) * ( b_WH * 0.55 ) : ( ( m - b ) / 200 ) * ( b_WH * -0.55 )
       }
-      */
 
+      /*
       if( ( m - b ) >= 200 ) {
         xy = -b_WH
       }else if ( ( m - b ) <= -200 ) {
@@ -72,7 +72,7 @@ window.onload = function() {
       }else {
         xy = m < b ? ( ( b - m ) / 200 ) * b_WH : ( ( m - b ) / 200 )
       }
-
+      */
 
       return xy
 
